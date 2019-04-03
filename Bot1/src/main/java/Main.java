@@ -1,5 +1,3 @@
-
-import org.osbot.rs07.api.Combat;
 import org.osbot.rs07.api.filter.Filter;
 import org.osbot.rs07.api.map.Position;
 import org.osbot.rs07.api.model.GroundItem;
@@ -7,11 +5,8 @@ import org.osbot.rs07.api.model.Item;
 import org.osbot.rs07.api.model.NPC;
 import org.osbot.rs07.script.Script;
 import org.osbot.rs07.script.ScriptManifest;
-import org.osbot.rs07.utility.ConditionalSleep;
 import org.osbot.rs07.utility.ConditionalSleep2;
 
-import javax.sql.rowset.Predicate;
-import java.util.List;
 import java.util.concurrent.Callable;
 
 @ScriptManifest(name = "osbot1", logo = "", version =1.0 , author ="JattMannu" , info ="osbot1" )
@@ -27,7 +22,7 @@ public class Main extends Script {
     public int onLoop() throws InterruptedException {
         sleep(1000); //So that I do not get stuck in forever loop. :)
         if (combat.isFighting()|| getPlayers().myPlayer().isUnderAttack() || getPlayers().myPlayer().isAnimating() || getPlayers().myPlayer().isMoving() ) return 0;
-
+        log(Math.random());
         if( Math.random()  < 0.3333 ) {
             log("Pickup feathers");
             final GroundItem feather = getGroundItems().closest(314);
@@ -41,7 +36,7 @@ public class Main extends Script {
         }else if( Math.random() > 0.6666 ) {
             log("Pickup Bones");
             final GroundItem bone = getGroundItems().closest(526);
-            ConditionalSleep2.sleep(6500, 500, new Callable<Boolean>() {
+            ConditionalSleep2.sleep(6500, 1000, new Callable<Boolean>() {
                 public Boolean call() throws Exception {
                     bone.interact("take");
                     return !getPlayers().myPlayer().isMoving();
@@ -53,15 +48,26 @@ public class Main extends Script {
                         item.interact("bury");
                         ConditionalSleep2.sleep(6500, 500, new Callable<Boolean>() {
                             public Boolean call() throws Exception {
-                                bone.interact("take");
+                                //bone.interact("take");
                                 return !getPlayers().myPlayer().isAnimating();
                             }
                         });
                     }
                 }
             }
-
-            log("Loop : " + count++);
+            while(hasRawChicken()) {
+                for (Item item : inventory.getItems()) {
+                    if (item != null && item.getId() == 2138) {
+                        log("Droping chicken");
+                        item.interact("drop");
+                        ConditionalSleep2.sleep(6500, 500, new Callable<Boolean>() {
+                            public Boolean call() throws Exception {
+                                return !getPlayers().myPlayer().isAnimating();
+                            }
+                        });
+                    }
+                }
+            }
         }
         else {
             log("Attack Chicken!!!");
@@ -79,6 +85,8 @@ public class Main extends Script {
                 });
             }
         }
+
+        log("Loop : " + count++);
         return 0;
     }
 
@@ -109,5 +117,20 @@ public class Main extends Script {
         log("No bones in bag");
         return false;
     }
+
+    private boolean hasRawChicken() throws InterruptedException {
+
+        for (Item item :inventory.getItems()) {
+
+            if(item!=null && item.getId() == 2138) {
+                sleep(100);
+                log("RawChicken in bag!!!");
+                return true;
+            }
+        }
+        log("No RawChicken in bag");
+        return false;
+    }
+
 
 }
