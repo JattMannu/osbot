@@ -17,7 +17,7 @@
         <artifactId>OSBot</artifactId>
         <version>2.5.42</version>
         <scope>system</scope>
-        <systemPath>${basedir}/../lib/osbot.jar</systemPath>
+        <systemPath>${basedir}/../lib/OSBot 2.5.42.jar</systemPath>
     </dependency>
 </dependencies>
     <build>
@@ -27,7 +27,7 @@
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>2.3.1</version>
                 <configuration>
-                    <outputDirectory>/home/mannu/OSBot/Scripts</outputDirectory>
+                    <outputDirectory>/home/${env.USER}/OSBot/Scripts</outputDirectory>
                 </configuration>
             </plugin>
         </plugins>
